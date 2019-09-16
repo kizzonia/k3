@@ -1,0 +1,77 @@
+<!--shop  area start-->
+<div class="shop_area">
+  <div class="container">
+    <div class="row">
+
+      <div class="col-lg-9 col-md-12">
+        <!--shop wrapper start-->
+        <!--shop toolbar ads area start-->
+        <!-- <div class="shop_banner">
+        <img src="assets/img/bg/banner8.jpg" alt="Ads Area">
+      </div> -->
+      <div class="shop_title">
+        <h1>shop</h1>
+      </div>
+      <div class="shop_toolbar_wrapper">
+        <div class="shop_toolbar_btn">
+
+          <button data-role="grid_3" type="button" class="active btn-grid-3" data-toggle="tooltip" title="3"></button>
+
+          <button data-role="grid_4" type="button"  class=" btn-grid-4" data-toggle="tooltip" title="4"></button>
+
+          <button data-role="grid_list" type="button"  class="btn-list" data-toggle="tooltip" title="List"></button>
+        </div>
+        <div class=" niceselect_option">
+
+          <form class="select_option" action="#">
+            <select name="orderby" id="short">
+
+              <option selected value="1">Sort by average rating</option>
+              <option  value="2">Sort by popularity</option>
+              <option value="3">Sort by newness</option>
+              <option value="4">Sort by price: low to high</option>
+              <option value="5">Sort by price: high to low</option>
+              <option value="6">Product Name: Z</option>
+            </select>
+          </form>
+
+
+        </div>
+        <div class="page_amount">
+          <p>Showing 1–9 of 21 results</p>
+        </div>
+      </div>
+      <!--shop toolbar end-->
+
+<% if params[:keywords] %>
+
+  <div data-hook="search_results">
+    <% if @products.empty? %>
+      <h6 class="search-results-title"><%= t('spree.no_products_found') %></h6>
+    <% else %>
+      <%= render partial: 'spree/shared/products', locals: { products: @products, taxon: @taxon } %>
+    <% end %>
+  </div>
+
+<% else %>
+
+  <div data-hook="homepage_products">
+    <%= render partial: 'spree/shared/products', locals: { products: @products, taxon: @taxon } %>
+  </div>
+<% end %>
+<!--shop toolbar end-->
+<!--shop wrapper end-->
+    </div>
+  </div>
+</div>
+</div>
+
+<% content_for :sidebar do %>
+  <div data-hook="homepage_sidebar_navigation">
+    <% if "spree/products" == params[:controller] && @taxon %>
+      <%= render partial: 'spree/shared/filters' %>
+    <% else %>
+      <%= render partial: 'spree/shared/taxonomies' %>
+    <% end %>
+  </div>
+<% end %>

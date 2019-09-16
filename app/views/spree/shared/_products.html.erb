@@ -1,0 +1,105 @@
+<%
+  paginated_products = @searcher.retrieve_products if params.key?(:keywords)
+  paginated_products ||= products
+%>
+
+<% content_for :head do %>
+  <% if paginated_products.respond_to?(:total_pages) %>
+    <%= rel_next_prev_link_tags paginated_products %>
+  <% end %>
+<% end %>
+
+
+
+<div data-hook="products_search_results_heading">
+  <% if products.empty? %>
+    <div data-hook="products_search_results_heading_no_results_found">
+      <%= t('spree.no_products_found') %>
+    </div>
+  <% elsif params.key?(:keywords) %>
+    <div data-hook="products_search_results_heading_results_found">
+      <h6 class="search-results-title"><%= t('spree.search_results', keywords: h(params[:keywords])) %></h6>
+    </div>
+  <% end %>
+</div>
+
+<% if products.any? %>
+
+  <div id="products" class=" product-listing row " data-hook>
+    <% products.each do |product| %>
+      <% url = spree.product_path(product, taxon_id: @taxon.try(:id)) %>
+
+  <div class="col-lg-4 col-md-4 col-12 ">
+    <div class="single_product_list">
+      <!-- product single inner  -->
+      <div id="product_<%= product.id %>" class="single_product <%= cycle("alpha", "secondary", "", "omega secondary", name: "classes") %>" data-hook="products_list_item" itemscope itemtype="http://schema.org/Product">
+        <% cache(@taxon.present? ? [I18n.locale, current_pricing_options, @taxon, product] : [I18n.locale, current_pricing_options, product]) do %>
+          <%# do starts %>
+
+          <div class="product_name grid_name">
+            <h3> <%= link_to truncate(product.name, length: 50), url, class: 'info', itemprop: "name", title: product.name %>
+            </h3>
+          </div>
+
+          <div class="product_thumb ">
+            <%= link_to(render('spree/shared/image', image: product.gallery.images.first, size: :small, itemprop: "image"), url, class: "primary_img", itemprop: 'url') %>
+            <!-- <div class="label_product">
+                <span class="label_sale">-57%</span>
+            </div> -->
+          <div class="action_links">
+            <ul>
+              <li class="quick_button"><a href="#" data-toggle="modal" data-target="#modal_box"  title="quick view"> <span class="lnr lnr-magnifier"></span></a></li>
+              <li class="wishlist"><a href="wishlist.html" title="Add to Wishlist"><span class="lnr lnr-heart"></span></a></li>
+              <li class="compare"><a href="compare.html" title="compare"><span class="lnr lnr-sync"></span></a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="product_content grid_content">
+           <div class="content_inner">
+             <div class="product_footer d-flex align-items-center">
+               <div class="price_box">
+                 <span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+                   <% if price = product.price_for(current_pricing_options) %>
+                   <span class="current_price price selling "itemprop="price" content="<%= price.to_d %>">
+                     <%= price.to_html %>
+                   </span>
+                   <% end %>
+                   <span itemprop="priceCurrency" content="<%= current_pricing_options.currency %>"></span>
+
+                 </span>
+           </div>
+        </div>
+
+          <!-- cache do ends -->
+        <% end %>
+      </div>
+      <!-- Product Single ends -->
+      </div>
+      <!-- loop ends -->
+
+      </div>
+      <!-- single product ends -->
+    </div>  <!--  single product list ends -->
+
+    </div>
+
+
+  <% end %>
+    </div>
+<% reset_cycle("classes") %>
+
+<%# if ends %>
+
+<% end %>
+
+<div class="shop_toolbar t_bottom">
+  <div class="pagination">
+    <ul>
+      <% if paginated_products.respond_to?(:total_pages) %>
+      <li class="active">
+        <%= paginate paginated_products %>
+      </li><% end %>
+
+    </ul>
+  </div>
+</div>
