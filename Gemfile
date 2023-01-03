@@ -24,7 +24,7 @@ gem 'bootstrap', '~> 4.3.1'
 gem 'devise', github: 'plataformatec/devise'
 gem 'ckeditor', '4.2.4'
 gem "just-datetime-picker"
-gem 'httparty', '~> 0.13.7'
+gem 'httparty', '~> 0.21.0'
 gem "simple_form"
 gem 'friendly_id'
 gem 'solidus'
